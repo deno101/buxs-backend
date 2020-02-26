@@ -56,7 +56,9 @@ ROOT_URLCONF = 'buxsbackend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'JSONTemplates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
