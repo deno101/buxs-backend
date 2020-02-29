@@ -22,4 +22,5 @@ urlpatterns = [
     path('login/', views.login),
     path('test/', views.test),
     path('signup/', views.signup),
+    path('getMP/', views.get_mp)
 ]
