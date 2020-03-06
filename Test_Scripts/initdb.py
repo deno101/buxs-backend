@@ -32,7 +32,7 @@ def connect():
         price = random.randint(100, 1000)
         date_epoch = str(time.time())
         image_url = f'{i}.jpg'
-        query = f"INSERT INTO buxsbackend_marketplaceproducts VALUES('{id}','{name}','{price}','{date_epoch}','all','{image_url}')"
+        query = f"INSERT INTO buxsbackend_marketplaceproducts VALUES('{id}','{name}','{price}','{date_epoch}','all','{image_url}',1)"
         cursor.execute(query)
         i += 1
         conn.commit()
