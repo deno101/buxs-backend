@@ -26,8 +26,13 @@ def get_mp(request):
 def get_img(request):
     path = request.GET.get('path')
 
-    with open(f'img/{path}', 'rb') as f:
-        data = f.read()
+    # with open(f'img/{path}', 'rb') as f:
+    #     data = f.read()
+    #
+    # return HttpResponse(data, content_type="image/jpeg")
 
-    return HttpResponse(data, content_type="image/jpeg")
+    return HttpResponseNotFound()
+
+def get_desc(request):
+    pass
 
