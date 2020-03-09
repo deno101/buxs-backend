@@ -18,8 +18,10 @@
     <input type="submit">
 </form>
 <br>
-<button href="{% url 'login' %}">
+<a href="{% url 'login' %}">
+    <button href="{% url 'login' %}">
     Login
 </button>
+</a>
 
 {{ error_msg }}

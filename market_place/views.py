@@ -51,14 +51,13 @@ def upload_data(request):
         form = forms.ProductUploadForm(request.POST)
 
         if form.is_valid():
-            # TODO: pass data to database
             db_inst = models.MarketPlaceProducts.objects.create(owner=request.user)
             db_inst.save(commit=False)
             product_id = db_inst.id
 
-            db_inst.name = form.name
-            db_inst.price = form.price
-            db_inst.category = form.category
+            db_inst.name = form.cleaned_data.get('name')
+            db_inst.price = form.cleaned_data.get('price')
+            db_inst.category = form.cleaned_data.get('category')
             db_inst.date_epoch = time.time()
             db_inst.image_url1 = product_id + "-1." + request.FILES['img1'].name.split('.')[-1]
             _thread.start_new_thread(savefile, (db_inst.image_url1, request.FILES['img1']))
@@ -66,8 +65,8 @@ def upload_data(request):
             _thread.start_new_thread(savefile, (db_inst.image_url2, request.FILES['img2']))
             db_inst.image_url3 = product_id + "-3." + request.FILES['img3'].name.split('.')[-1]
             _thread.start_new_thread(savefile, (db_inst.image_url3, request.FILES['img3']))
-            db_inst.description = form.description
-            db_inst.stock = form.stock
+            db_inst.description = form.cleaned_data.get('description')
+            db_inst.stock = form.cleaned_data.get('stock')
 
             db_inst.save()
 
@@ -94,8 +93,8 @@ def log_in(request):
         if not request.user.is_authenticated:
             form = forms.Login(request.POST)
             if form.is_valid():
-                username = form.username
-                password = form.password
+                username = form.cleaned_data.get('username')
+                password = form.cleaned_data.get("password")
 
                 user = authenticate(username=username, password=password)
                 try:
