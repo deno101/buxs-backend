@@ -8,9 +8,9 @@ class ProductUploadForm(forms.Form):
     category = forms.CharField(max_length=50)
     description = forms.CharField(max_length=500)
     stock = forms.IntegerField()
-    img1 = forms.ImageField()
-    img2 = forms.ImageField()
-    img3 = forms.ImageField()
+    img1 = forms.FileField()
+    img2 = forms.FileField()
+    img3 = forms.FileField()
 
 
 class Login(forms.Form):
