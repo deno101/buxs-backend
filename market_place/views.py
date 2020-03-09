@@ -52,7 +52,7 @@ def upload_data(request):
 
         if form.is_valid():
             db_inst = models.MarketPlaceProducts.objects.create(owner=request.user)
-            db_inst.save(commit=False)
+            db_inst.save(force_insert=True)
             product_id = db_inst.id
 
             db_inst.name = form.cleaned_data.get('name')
@@ -68,7 +68,7 @@ def upload_data(request):
             db_inst.description = form.cleaned_data.get('description')
             db_inst.stock = form.cleaned_data.get('stock')
 
-            db_inst.save()
+            db_inst.save(force_update=True)
 
             return render(request, 'MPPupload.html', {
                 'error_msg': 'Successsssssssssss'
