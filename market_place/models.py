@@ -6,11 +6,11 @@ from django.contrib.auth.models import User
 
 
 class MarketPlaceProducts(models.Model):
-    id = models.CharField(max_length=100, primary_key=True)
-    name = models.CharField(max_length=100)
-    price = models.CharField(max_length=50)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, default='')
+    price = models.CharField(max_length=50, default='')
     owner = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
-    date_epoch = models.CharField(max_length=100)
+    date_epoch = models.CharField(max_length=100, default='')
     category = models.CharField(max_length=50, default='')
 
     # product  require three images

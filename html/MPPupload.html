@@ -1,0 +1,25 @@
+<form method="post">
+    {% csrf_token %}
+    Product Name: <br>
+    <input type="text" name="name"><br>
+    price: <br>
+    <input type="text" name="price"><br>
+    category: <br>
+    <input type="text" name="description"><br>
+    Amount in Stock: <br>
+    <input type="number" name="stock"><br>
+    Image1: <br>
+    <input type="file" name="img1"> <br>
+    Image2: <br>
+    <input type="file" name="img2"> <br>
+    Image3: <br>
+    <input type="file" name="img3"> <br>
+
+    <input type="submit">
+</form>
+<br>
+<button href="{% url 'login' %}">
+    Login
+</button>
+
+{{ error_msg }}
