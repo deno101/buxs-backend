@@ -60,11 +60,14 @@ def upload_data(request):
             db_inst.category = form.cleaned_data.get('category')
             db_inst.date_epoch = time.time()
             db_inst.image_url1 = product_id + "-1." + request.FILES['img1'].name.split('.')[-1]
-            _thread.start_new_thread(savefile, (db_inst.image_url1, request.FILES['img1']))
+            # _thread.start_new_thread(savefile, (db_inst.image_url1, request.FILES['img1']))
+            savefile(db_inst.image_url2, request.FILES['img2'])
             db_inst.image_url2 = product_id + "-2." + request.FILES['img2'].name.split('.')[-1]
-            _thread.start_new_thread(savefile, (db_inst.image_url2, request.FILES['img2']))
+            # _thread.start_new_thread(savefile, (db_inst.image_url2, request.FILES['img2']))
+            savefile(db_inst.image_url3, request.FILES['img3'])
             db_inst.image_url3 = product_id + "-3." + request.FILES['img3'].name.split('.')[-1]
-            _thread.start_new_thread(savefile, (db_inst.image_url3, request.FILES['img3']))
+            # _thread.start_new_thread(savefile, (db_inst.image_url3, request.FILES['img3']))
+            savefile(db_inst.image_url1, request.FILES['img1'])
             db_inst.description = form.cleaned_data.get('description')
             db_inst.stock = form.cleaned_data.get('stock')
 
@@ -86,7 +89,8 @@ def upload_data(request):
 def savefile(file_name, data):
     path = 'img/' + file_name
     with open(path, 'wb') as infile:
-        infile.write(data)
+        for chunks in data.chunks():
+            infile.write(chunks)
 
 
 def log_in(request):
