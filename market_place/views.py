@@ -53,7 +53,7 @@ def upload_data(request):
         if form.is_valid():
             db_inst = models.MarketPlaceProducts.objects.create(owner=request.user)
             db_inst.save()
-            product_id = db_inst.id
+            product_id = str(db_inst.id)
 
             db_inst.name = form.cleaned_data.get('name')
             db_inst.price = form.cleaned_data.get('price')
