@@ -87,7 +87,7 @@ def upload_data(request):
 
 
 def savefile(file_name, data):
-    path = '/img/' + file_name
+    path = 'img/' + file_name
     with open(path, 'wb') as infile:
         for chunks in data.chunks():
             infile.write(chunks)
