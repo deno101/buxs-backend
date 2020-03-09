@@ -76,7 +76,8 @@ def upload_data(request):
 
         else:
             return render(request, 'MPPupload.html', {
-                'error_msg': 'invalid form date',
+                'error_msg': 'invalid form data',
+                'form': form
             })
     else:
         return render(request, 'MPPupload.html')
