@@ -48,7 +48,7 @@ def upload_data(request):
         })
 
     if request.method == 'POST':
-        form = forms.ProductUploadForm(request.POST)
+        form = forms.ProductUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
             db_inst = models.MarketPlaceProducts.objects.create(owner=request.user)
