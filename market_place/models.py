@@ -12,4 +12,11 @@ class MarketPlaceProducts(models.Model):
     owner = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
     date_epoch = models.CharField(max_length=100)
     category = models.CharField(max_length=50, default='')
-    image_url = models.CharField(max_length=100, default='')
+
+    # product  require three images
+    image_url1 = models.CharField(max_length=100, default='')
+    image_url2 = models.CharField(max_length=100, default='')
+    image_url3 = models.CharField(max_length=100, default='')
+
+    description = models.CharField(max_length=500, default='')
+    stock = models.IntegerField(default=50)
