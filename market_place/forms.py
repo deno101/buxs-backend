@@ -3,6 +3,7 @@ from django import forms
 
 # TO BE USED IN DEBUG TO POPULATE DB'S FOR TEST
 class ProductUploadForm(forms.Form):
+    brand = forms.CharField(max_length=100)
     name = forms.CharField(max_length=100)
     price = forms.CharField(max_length=100)
     category = forms.CharField(max_length=50)

@@ -20,3 +20,4 @@ class MarketPlaceProducts(models.Model):
 
     description = models.CharField(max_length=500, default='')
     stock = models.IntegerField(default=50)
+    brand = models.CharField(max_length=100, default='')
