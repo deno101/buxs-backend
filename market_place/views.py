@@ -44,7 +44,7 @@ def get_desc(request):
 def upload_data(request):
     if not request.user.is_authenticated:
         return render(request, 'MPPupload.html', {
-            'error_msg': 'login first'
+            'error_msg': ' you are not logged in; login first'
         })
 
     if request.method == 'POST':
@@ -79,8 +79,7 @@ def upload_data(request):
 
         else:
             return render(request, 'MPPupload.html', {
-                'error_msg': 'invalid form data',
-                'form': form
+                'error_msg': 'invalid form data'
             })
     else:
         return render(request, 'MPPupload.html')
