@@ -29,12 +29,11 @@ def get_mp(request):
 def get_img(request):
     path = request.GET.get('path')
 
-    # with open(f'img/{path}', 'rb') as f:
-    #     data = f.read()
-    #
-    # return HttpResponse(data, content_type="image/jpeg")
+    with open(f'img/{path}', 'rb') as f:
+        data = f.read()
 
-    return HttpResponseNotFound()
+    return HttpResponse(data, content_type="image/jpeg")
+
 
 
 def get_desc(request):
@@ -62,14 +61,14 @@ def upload_data(request):
             db_inst.image_url1 = product_id + "-1." + request.FILES['img1'].name.split('.')[-1]
 
             # _thread.start_new_thread(savefile, (db_inst.image_url1, request.FILES['img1']))
-            savefile(db_inst.image_url1, request.FILES['img1'])
+            save_file(db_inst.image_url1, request.FILES['img1'])
             db_inst.image_url2 = product_id + "-2." + request.FILES['img2'].name.split('.')[-1]
             # _thread.start_new_thread(savefile, (db_inst.image_url2, request.FILES['img2']))
 
-            savefile(db_inst.image_url2, request.FILES['img2'])
+            save_file(db_inst.image_url2, request.FILES['img2'])
             db_inst.image_url3 = product_id + "-3." + request.FILES['img3'].name.split('.')[-1]
             # _thread.start_new_thread(savefile, (db_inst.image_url3, request.FILES['img3']))
-            savefile(db_inst.image_url3, request.FILES['img3'])
+            save_file(db_inst.image_url3, request.FILES['img3'])
             db_inst.description = form.cleaned_data.get('description')
             db_inst.stock = form.cleaned_data.get('stock')
             db_inst.brand = form.cleaned_data.get('brand')
@@ -88,7 +87,7 @@ def upload_data(request):
         return render(request, 'MPPupload.html')
 
 
-def savefile(file_name, data):
+def save_file(file_name, data):
     path = 'img/' + file_name
     with open(path, 'wb') as infile:
         for chunks in data.chunks():
@@ -107,7 +106,7 @@ def log_in(request):
                 try:
                     login(request, user)
                 except AttributeError:
-                    return render(request, 'login.html',{
+                    return render(request, 'login.html', {
                         'error': 'invalid credentials'
                     })
 
@@ -122,3 +121,10 @@ def log_in(request):
             redirect('uplaod')
     else:
         return render(request, 'login.html')
+
+
+def get_product_desc_by_is(request):
+    if request.method == 'POST':
+        pass
+    else:
+        return HttpResponse('{}')
