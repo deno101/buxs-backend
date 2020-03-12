@@ -35,7 +35,6 @@ def get_img(request):
     return HttpResponse(data, content_type="image/jpeg")
 
 
-
 def get_desc(request):
     pass
 
@@ -123,8 +122,13 @@ def log_in(request):
         return render(request, 'login.html')
 
 
-def get_product_desc_by_is(request):
-    if request.method == 'POST':
-        pass
+def get_product_desc_by_id(request):
+    if request.method == 'GET':
+        pid = int(request.GET.get('pid'))
+
+        data = models.MarketPlaceProducts.objects.get(id=pid)
+        print(data)
+
+        return HttpResponse(data)
     else:
         return HttpResponse('{}')
