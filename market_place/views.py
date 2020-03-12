@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 import _thread
 import time
+from django.forms.models import model_to_dict
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseNotFound
@@ -126,9 +127,10 @@ def get_product_desc_by_id(request):
     if request.method == 'GET':
         pid = int(request.GET.get('pid'))
 
-        data = models.MarketPlaceProducts.objects.filter(id=pid)
-        print(data.all())
+        data = models.MarketPlaceProducts.objects.all(id=pid)
+        data_dict = model_to_dict(data)
+        print(data_dict)
 
-        return HttpResponse(data)
+        return HttpResponse(data_dict)
     else:
         return HttpResponse('{}')
