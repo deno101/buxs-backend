@@ -131,6 +131,6 @@ def get_product_desc_by_id(request):
         data_dict = model_to_dict(data)
         print(data_dict)
 
-        return HttpResponse(data_dict)
+        return HttpResponse(str(data_dict))
     else:
         return HttpResponse('{}')
