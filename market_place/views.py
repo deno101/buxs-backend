@@ -129,8 +129,7 @@ def get_product_desc_by_id(request):
 
         data = models.MarketPlaceProducts.objects.get(id=pid)
         data_dict = model_to_dict(data)
-        print(data_dict)
 
-        return HttpResponse(str(data_dict))
+        return HttpResponse(json.dumps(data_dict))
     else:
         return HttpResponse('{}')
