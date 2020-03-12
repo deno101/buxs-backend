@@ -126,8 +126,8 @@ def get_product_desc_by_id(request):
     if request.method == 'GET':
         pid = int(request.GET.get('pid'))
 
-        data = models.MarketPlaceProducts.objects.get(id=pid)
-        print(data)
+        data = models.MarketPlaceProducts.objects.filter(id=pid)
+        print(data.all())
 
         return HttpResponse(data)
     else:
