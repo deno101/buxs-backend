@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
-import _thread
 import time
 from django.forms.models import model_to_dict
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseNotFound
-from . import forms, models
+from . import forms, models, image_compression
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+import threading
+
+from .image_compression import Compression
 
 
 def get_mp(request):
@@ -16,11 +18,12 @@ def get_mp(request):
         data = models.MarketPlaceProducts.objects.all()
         values = data.values()
         dic = {}
-        for i in values:
-            dic[i["id"]] = i
-
-        # print(dic)
-
+        try:
+            for i in values:
+                dic[i["id"]] = i
+        except KeyError:
+            pass
+        threading.Thread(target=thread_test, args=("fuck u",)).start()
         data = json.dumps(dic, cls=DjangoJSONEncoder)
         return HttpResponse(data, content_type='json')
     else:
@@ -58,17 +61,19 @@ def upload_data(request):
             db_inst.price = form.cleaned_data.get('price')
             db_inst.category = form.cleaned_data.get('category')
             db_inst.date_epoch = time.time()
-            db_inst.image_url1 = product_id + "-1." + request.FILES['img1'].name.split('.')[-1]
 
-            # _thread.start_new_thread(savefile, (db_inst.image_url1, request.FILES['img1']))
-            save_file(db_inst.image_url1, request.FILES['img1'])
-            db_inst.image_url2 = product_id + "-2." + request.FILES['img2'].name.split('.')[-1]
-            # _thread.start_new_thread(savefile, (db_inst.image_url2, request.FILES['img2']))
+            origin1 = product_id + "-1." + request.FILES['img1'].name.split('.')[-1]
+            db_inst.image_url1 = product_id + "-1." + 'jpg'
+            Compression(origin=origin1, destination=db_inst.image_url1, data=request.FILES['img1']).compress()
 
-            save_file(db_inst.image_url2, request.FILES['img2'])
-            db_inst.image_url3 = product_id + "-3." + request.FILES['img3'].name.split('.')[-1]
-            # _thread.start_new_thread(savefile, (db_inst.image_url3, request.FILES['img3']))
-            save_file(db_inst.image_url3, request.FILES['img3'])
+            origin2 = product_id + "-2." + request.FILES['img2'].name.split('.')[-1]
+            db_inst.image_url2 = product_id + "-2." + 'jpg'
+            Compression(origin=origin2, destination=db_inst.image_url2, data=request.FILES['img2']).compress()
+
+            origin3 = product_id + "-3." + request.FILES['img3'].name.split('.')[-1]
+            db_inst.image_url3 = product_id + "-3." + 'jpg'
+            Compression(origin=origin3, destination=db_inst.image_url3, data=request.FILES['img3']).compress()
+
             db_inst.description = form.cleaned_data.get('description')
             db_inst.stock = form.cleaned_data.get('stock')
             db_inst.brand = form.cleaned_data.get('brand')
@@ -85,13 +90,6 @@ def upload_data(request):
             })
     else:
         return render(request, 'MPPupload.html')
-
-
-def save_file(file_name, data):
-    path = 'img/' + file_name
-    with open(path, 'wb') as infile:
-        for chunks in data.chunks():
-            infile.write(chunks)
 
 
 def log_in(request):
@@ -133,3 +131,7 @@ def get_product_desc_by_id(request):
         return HttpResponse(json.dumps(data_dict))
     else:
         return HttpResponse('{}')
+
+
+def thread_test(message):
+    print(message)
