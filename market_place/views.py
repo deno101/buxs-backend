@@ -33,7 +33,7 @@ def get_mp(request):
 def get_img(request):
     path = request.GET.get('path')
 
-    with open(f'img/{path}', 'rb') as f:
+    with open(f'img/compressed/{path}', 'rb') as f:
         data = f.read()
 
     return HttpResponse(data, content_type="image/jpeg")
