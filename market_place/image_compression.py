@@ -33,4 +33,5 @@ class Compression:
 
         img = Image.open(self.image_dir + self.origin)
         img = img.resize((200, 200), Image.ANTIALIAS)
+        img = img.convert('RGB')
         img.save(self.compressed_dir+self.destination, 'JPEG', quality=75, optimize=True)
