@@ -5,6 +5,8 @@ from django.forms.models import model_to_dict
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseNotFound
+
+from buxsbackend import settings
 from . import forms, models, image_compression
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -14,6 +16,10 @@ from .image_compression import Compression
 
 
 def get_mp(request):
+    source = request.META.get('HTTP_X_FORWARDED_FOR')
+    if not source:
+        source = request.META.get('REMOTE_ADDR')
+
     if request.method == 'GET':
         data = models.MarketPlaceProducts.objects.all()
         values = data.values()
@@ -24,9 +30,11 @@ def get_mp(request):
                 dic[i["id"]] = i
         except KeyError:
             pass
-        threading.Thread(target=thread_test, args=("fuck u",)).start()
         data = json.dumps(dic, cls=DjangoJSONEncoder)
-        return HttpResponse(data, content_type='json')
+
+        response = HttpResponse(data, content_type='json')
+        response.set_cookie("name", f'source -> {source}')
+        return response
     else:
         return HttpResponseNotFound()
 
@@ -134,5 +142,3 @@ def get_product_desc_by_id(request):
         return HttpResponse('{}')
 
 
-def thread_test(message):
-    print(message)
