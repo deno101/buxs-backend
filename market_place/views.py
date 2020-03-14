@@ -18,6 +18,7 @@ def get_mp(request):
         data = models.MarketPlaceProducts.objects.all()
         values = data.values()
         dic = {}
+        print(f' cookies -> {request.COOKIES}')
         try:
             for i in values:
                 dic[i["id"]] = i
