@@ -11,7 +11,7 @@ from . import forms, models, image_compression
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 import threading
-
+from django.conf import settings
 from .image_compression import Compression
 
 
@@ -33,7 +33,10 @@ def get_mp(request):
         data = json.dumps(dic, cls=DjangoJSONEncoder)
 
         response = HttpResponse(data, content_type='json')
-        response.set_cookie("name", f'source -> {source}')
+        response.set_cookie("Test", f"host -> {source}", domain=settings.SESSION_COOKIE_DOMAIN,
+                            secure=settings.SESSION_COOKIE_SECURE or None)
+        response.set_cookie("Test2", f"host2 -> {source}", domain=settings.SESSION_COOKIE_DOMAIN,
+                            secure=settings.SESSION_COOKIE_SECURE or None)
         return response
     else:
         return HttpResponseNotFound()
@@ -140,5 +143,3 @@ def get_product_desc_by_id(request):
         return HttpResponse(json.dumps(data_dict))
     else:
         return HttpResponse('{}')
-
-
