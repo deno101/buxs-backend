@@ -18,7 +18,7 @@ def test(request):
 
 
 @csrf_exempt
-def login(request):
+def log_in(request):
     if request.method == 'POST':
         password = request.POST.get('Password')
         username = request.POST.get('Username')
