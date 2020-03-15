@@ -41,6 +41,7 @@ def log_in(request):
         response.set_cookie("username", username, max_age=max_age, expires=expires,
                             domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None)
 
+        print(response.cookies.values())
         return response
     else:
         return render(request, 'auth.json', {
