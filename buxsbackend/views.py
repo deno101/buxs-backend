@@ -1,8 +1,11 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from . import forms
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import login, authenticate, logout
+import datetime
+from django.conf import settings
 
 
 def test(request):
@@ -20,9 +23,29 @@ def login(request):
         password = request.POST.get('Password')
         username = request.POST.get('Username')
 
-        return HttpResponse(f'Your credentials are {password}, {username}')
+        user = authenticate(username=username, password=password)
+        try:
+            login(request, user)
+        except AttributeError:
+            return render(request, 'auth.json', {
+                'statuscode': 404,
+            })
+
+        response = render_to_response("auth.json", {
+            'statuscode': 200,
+        })
+
+        max_age = 365 * 24 * 60 * 60
+        expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age),
+                                             "%a, %d-%b-%Y %H:%M:%S GMT")
+        response.set_cookie("username", username, max_age=max_age, expires=expires,
+                            domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None)
+
+        return response
     else:
-        return HttpResponse(f'Request method {request.method}')
+        return render(request, 'auth.json', {
+            'statuscode': 402,
+        })
 
 
 @csrf_exempt
@@ -48,5 +71,3 @@ def signup(request):
             'source': '/signup',
             'statuscode': 200,
         })
-
-
