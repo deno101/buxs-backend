@@ -20,16 +20,13 @@ def test(request):
 @csrf_exempt
 def log_in(request):
     if request.method == 'POST':
-        password = request.POST.get('Password')
-        username = request.POST.get('Username')
-        print(request.POST)
+        password = request.POST.get('password')
+        username = request.POST.get('username')
 
         user = authenticate(username=username, password=password)
-        print(f'password-> {password}, username -> {username}')
         try:
             login(request, user)
         except AttributeError as q:
-            print(q)
             return render(request, 'auth.json', {
                 'statuscode': 404,
             })
