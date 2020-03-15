@@ -22,6 +22,7 @@ def log_in(request):
     if request.method == 'POST':
         password = request.POST.get('Password')
         username = request.POST.get('Username')
+        print(request.POST)
 
         user = authenticate(username=username, password=password)
         print(f'password-> {password}, username -> {username}')
