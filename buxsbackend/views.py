@@ -24,6 +24,7 @@ def log_in(request):
         username = request.POST.get('Username')
 
         user = authenticate(username=username, password=password)
+        print(f'password-> {password}, username -> {username}')
         try:
             login(request, user)
         except AttributeError as q:
