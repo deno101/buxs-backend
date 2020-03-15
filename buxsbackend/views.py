@@ -26,7 +26,8 @@ def log_in(request):
         user = authenticate(username=username, password=password)
         try:
             login(request, user)
-        except AttributeError:
+        except AttributeError as q:
+            print(q)
             return render(request, 'auth.json', {
                 'statuscode': 404,
             })
