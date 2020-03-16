@@ -4,26 +4,16 @@ import time
 from django.forms.models import model_to_dict
 
 # Create your views here.
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 
-from buxsbackend import settings
-from . import forms, models, image_compression
+from . import forms, models
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-import threading
 from django.conf import settings
 from .image_compression import Compression
 
 
 def get_mp(request):
-
-    if request.user.is_authenticated:
-        print(f"user is authenticated: cookies{request.COOKIES}")
-
-    source = request.META.get('HTTP_X_FORWARDED_FOR')
-    if not source:
-        source = request.META.get('REMOTE_ADDR')
-
     if request.method == 'GET':
         data = models.MarketPlaceProducts.objects.all()
         values = data.values()
@@ -36,10 +26,6 @@ def get_mp(request):
         data = json.dumps(dic, cls=DjangoJSONEncoder)
 
         response = HttpResponse(data, content_type='json')
-        response.set_cookie("Test", f"host -> {source}", domain=settings.SESSION_COOKIE_DOMAIN,
-                            secure=settings.SESSION_COOKIE_SECURE or None)
-        response.set_cookie("Test2", f"host2 -> {source}", domain=settings.SESSION_COOKIE_DOMAIN,
-                            secure=settings.SESSION_COOKIE_SECURE or None)
         return response
     else:
         return HttpResponseNotFound()
@@ -108,8 +94,6 @@ def upload_data(request):
 
 
 def log_in(request):
-    if request.user.is_authenticated:
-        print(f"user is authenticated: cookies{request.COOKIES}")
     if request.method == 'POST':
         if not request.user.is_authenticated:
             form = forms.Login(request.POST)
@@ -146,6 +130,6 @@ def get_product_desc_by_id(request):
         data = models.MarketPlaceProducts.objects.get(id=pid)
         data_dict = model_to_dict(data)
 
-        return HttpResponse(json.dumps(data_dict))
+        return HttpResponse(json.dumps(data_dict), content_type='json')
     else:
-        return HttpResponse('{}')
+        return HttpResponseBadRequest()
