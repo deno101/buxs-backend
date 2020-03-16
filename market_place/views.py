@@ -16,6 +16,10 @@ from .image_compression import Compression
 
 
 def get_mp(request):
+
+    if request.user.is_authenticated:
+        print(f"user is authenticated: cookies{request.COOKIES}")
+
     source = request.META.get('HTTP_X_FORWARDED_FOR')
     if not source:
         source = request.META.get('REMOTE_ADDR')
@@ -24,7 +28,6 @@ def get_mp(request):
         data = models.MarketPlaceProducts.objects.all()
         values = data.values()
         dic = {}
-        print(f' cookies -> {request.COOKIES}')
         try:
             for i in values:
                 dic[i["id"]] = i
