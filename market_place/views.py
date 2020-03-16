@@ -105,6 +105,8 @@ def upload_data(request):
 
 
 def log_in(request):
+    if request.user.is_authenticated:
+        print(f"user is authenticated: cookies{request.COOKIES}")
     if request.method == 'POST':
         if not request.user.is_authenticated:
             form = forms.Login(request.POST)
