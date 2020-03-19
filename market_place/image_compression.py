@@ -22,6 +22,8 @@ class Compression:
         self.origin = origin
         self.data = data
         self.destination = destination
+        if destination is None:
+            self.destination = origin
 
     def compress(self):
         threading.Thread(target=self.__create_compressed_thread).start()

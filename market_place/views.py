@@ -11,6 +11,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from .image_compression import Compression
+import base64
 
 
 def get_mp(request):
@@ -91,6 +92,39 @@ def upload_data(request):
             })
     else:
         return render(request, 'MPPupload.html')
+
+
+def upload_data_from_android(request):
+    if request.method == 'POST' and request.user.is_authenticated():
+        # get data from post data
+        db_inst = models.MarketPlaceProducts.objects.create(owner=request.user)
+        product_id = str(db_inst.id)
+
+        db_inst.name = request.POST['name']
+        db_inst.price = request.POST['price']
+        db_inst.category = request.POST['category']
+        db_inst.date_epoch = time.time()
+        db_inst.stock = request.POST['stock']
+        db_inst.brand = request.POST['brand']
+
+        # handle image conversion from string to bytes
+        # since all images are converted to JPEG in android no need to get img type
+        data = base64.b64decode(request.POST['img1'])
+        db_inst.image_url1 = product_id + "-1.jpg"
+        Compression(db_inst.image_url1, data, None).compress()
+
+        data = base64.b64decode(request.POST['img2'])
+        db_inst.image_url2 = product_id + "-2.jpg"
+        Compression(db_inst.image_url1, data, None).compress()
+
+        data = base64.b64decode(request.POST['img3'])
+        db_inst.image_url3 = product_id + "-3.jpg"
+        Compression(db_inst.image_url1, data, None).compress()
+
+        db_inst.save()
+    else:
+        response = HttpResponse(json.dumps(eval("{'code':400, 'auth':False, 'method':'unknown'}")), content_type='json')
+        return response
 
 
 def log_in(request):
