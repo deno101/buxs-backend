@@ -5,6 +5,7 @@ from . import forms
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, authenticate, logout
 import datetime
+import json
 from django.conf import settings
 
 
@@ -27,9 +28,8 @@ def log_in(request):
         try:
             login(request, user)
         except AttributeError as q:
-            return render(request, 'auth.json', {
-                'statuscode': 404,
-            })
+            response_str = "{'code':400, 'error':'Invalid Credentials'}"
+            return HttpResponse(json.dumps(eval(response_str)), content_type='json')
 
         response = render_to_response("auth.json", {
             'statuscode': 200,
@@ -41,12 +41,10 @@ def log_in(request):
         response.set_cookie("username", username, max_age=max_age, expires=expires,
                             domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None)
 
-        print(response.cookies.values())
         return response
     else:
-        return render(request, 'auth.json', {
-            'statuscode': 402,
-        })
+        response_str = "{'code':400, 'error':'Invalid HTTP method'}"
+        return HttpResponse(json.dumps(eval(response_str)), content_type='json')
 
 
 @csrf_exempt
@@ -65,10 +63,8 @@ def signup(request):
                 'statuscode': 200,
             })
         else:
-            print('error form not valid')
-            print(form)
+            response_str = "{'code':400, 'error':'invalid form data'}"
+            return HttpResponse(json.dumps(eval(response_str)), content_type='json')
     else:
-        return render(request, 'auth.json', {
-            'source': '/signup',
-            'statuscode': 200,
-        })
+        response_str = "{'code':400, 'error':'Wrong HTTP method'}"
+        return HttpResponse(json.dumps(eval(response_str)), content_type='json')

@@ -87,7 +87,6 @@ def upload_data(request):
             })
 
         else:
-            print(form)
             return render(request, 'MPPupload.html', {
                 'error_msg': 'invalid form data'
             })
@@ -140,7 +139,6 @@ def log_in(request):
                 try:
                     login(request, user)
                 except AttributeError as q:
-                    print(q)
                     return render(request, 'login.html', {
                         'error': 'invalid credentials'
                     })
