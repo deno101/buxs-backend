@@ -87,6 +87,7 @@ def upload_data(request):
             })
 
         else:
+            print(form)
             return render(request, 'MPPupload.html', {
                 'error_msg': 'invalid form data'
             })
