@@ -16,7 +16,7 @@ import base64
 
 def get_mp(request):
     if request.method == 'GET':
-        data = models.MarketPlaceProducts.objects.all().values('id', 'name', 'price', 'image_url1')
+        data = models.MarketPlaceProducts.objects.values('id', 'name', 'price', 'image_url1').all()
         dic = model_to_dict(data)
 
         data = json.dumps(dic, cls=DjangoJSONEncoder)
