@@ -6,5 +6,6 @@ urlpatterns = [
     path('img/', views.get_img),
     path('login/', views.log_in, name='login'),
     path('updata/', views.upload_data, name='uplaod'),
-    path('gdesc', views.get_product_desc_by_id),
+    path('gdesc', views.get_product_by_id_for_desc),
+    path('cart', views.get_product_by_id_for_cart),
 ]

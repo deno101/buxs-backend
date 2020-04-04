@@ -16,14 +16,9 @@ import base64
 
 def get_mp(request):
     if request.method == 'GET':
-        data = models.MarketPlaceProducts.objects.all()
-        values = data.values()
-        dic = {}
-        try:
-            for i in values:
-                dic[i["id"]] = i
-        except KeyError:
-            pass
+        data = models.MarketPlaceProducts.objects.all().values('id', 'name', 'price', 'image_url1')
+        dic = model_to_dict(data)
+
         data = json.dumps(dic, cls=DjangoJSONEncoder)
 
         response = HttpResponse(data, content_type='json')
@@ -156,7 +151,7 @@ def log_in(request):
         return render(request, 'login.html')
 
 
-def get_product_desc_by_id(request):
+def get_product_by_id_for_desc(request):
     if request.method == 'GET':
         pid = int(request.GET.get('pid'))
 
@@ -164,5 +159,17 @@ def get_product_desc_by_id(request):
         data_dict = model_to_dict(data)
 
         return HttpResponse(json.dumps(data_dict), content_type='json')
+    else:
+        return HttpResponseBadRequest()
+
+
+def get_product_by_id_for_cart(request):
+    if request.method == 'GET' and request.GET.get('pid'):
+        product_id = int(request.GET.get('pid'))
+
+        data = models.MarketPlaceProducts.objects.values('id', 'name', 'price', 'image_url1').get(id=product_id)
+        data_dict = model_to_dict(data)
+
+        return HttpResponse(json.dumps(data_dict), content_type=json)
     else:
         return HttpResponseBadRequest()
