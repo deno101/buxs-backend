@@ -16,7 +16,7 @@ import base64
 
 def get_mp(request):
     if request.method == 'GET':
-        data = models.MarketPlaceProducts.objects.values('id', 'name', 'price', 'image_url1').all()
+        data = models.MarketPlaceProducts.objects.only('id', 'name', 'price', 'image_url1').all()
         dic = model_to_dict(data)
 
         data = json.dumps(dic, cls=DjangoJSONEncoder)
@@ -167,7 +167,7 @@ def get_product_by_id_for_cart(request):
     if request.method == 'GET' and request.GET.get('pid'):
         product_id = int(request.GET.get('pid'))
 
-        data = models.MarketPlaceProducts.objects.values('id', 'name', 'price', 'image_url1').get(id=product_id)
+        data = models.MarketPlaceProducts.objects.only('id', 'name', 'price', 'image_url1').get(id=product_id)
         data_dict = model_to_dict(data)
 
         return HttpResponse(json.dumps(data_dict), content_type=json)
