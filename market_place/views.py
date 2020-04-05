@@ -13,13 +13,19 @@ from django.conf import settings
 from .image_compression import Compression
 import base64
 
+def queryset_to_dict(queryset):
+    dic = {}
+    for x in queryset:
+        dic[x['id']] = x
+
+    return dic
+
 
 def get_mp(request):
     if request.method == 'GET':
-        data = models.MarketPlaceProducts.objects.only('id', 'name', 'price', 'image_url1').all()
-        print(data)
-        dic = {}
-
+        data = models.MarketPlaceProducts.objects.all().values('id', 'name', 'price', 'image_url1')
+        
+        dic = queryset_to_dict(data)
         data = json.dumps(dic, cls=DjangoJSONEncoder)
 
         response = HttpResponse(data, content_type='json')
