@@ -13,6 +13,7 @@ from django.conf import settings
 from .image_compression import Compression
 import base64
 
+
 def queryset_to_dict(queryset):
     dic = {}
     for x in queryset:
