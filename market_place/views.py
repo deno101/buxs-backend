@@ -4,14 +4,15 @@ import time
 from django.forms.models import model_to_dict
 
 # Create your views here.
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseForbidden
 
 from . import forms, models
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from django.conf import settings
 from .image_compression import Compression
 import base64
+
+from django.views.decorators.csrf import csrf_exempt
 
 
 def queryset_to_dict(queryset):
@@ -25,7 +26,7 @@ def queryset_to_dict(queryset):
 def get_mp(request):
     if request.method == 'GET':
         data = models.MarketPlaceProducts.objects.all().values('id', 'name', 'price', 'image_url1')
-        
+
         dic = queryset_to_dict(data)
         data = json.dumps(dic, cls=DjangoJSONEncoder)
 
@@ -97,8 +98,12 @@ def upload_data(request):
         return render(request, 'MPPupload.html')
 
 
+@csrf_exempt
 def upload_data_from_android(request):
-    if request.method == 'POST' and request.user.is_authenticated():
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
         # get data from post data
         db_inst = models.MarketPlaceProducts.objects.create(owner=request.user)
         product_id = str(db_inst.id)
@@ -109,6 +114,7 @@ def upload_data_from_android(request):
         db_inst.date_epoch = time.time()
         db_inst.stock = request.POST['stock']
         db_inst.brand = request.POST['brand']
+        db_inst.description = request.POST['desc']
 
         # handle image conversion from string to bytes
         # since all images are converted to JPEG in android no need to get img type
@@ -118,16 +124,16 @@ def upload_data_from_android(request):
 
         data = base64.b64decode(request.POST['img2'])
         db_inst.image_url2 = product_id + "-2.jpg"
-        Compression(db_inst.image_url1, data, None).compress()
+        Compression(db_inst.image_url2, data, None).compress()
 
         data = base64.b64decode(request.POST['img3'])
         db_inst.image_url3 = product_id + "-3.jpg"
-        Compression(db_inst.image_url1, data, None).compress()
+        Compression(db_inst.image_url3, data, None).compress()
 
         db_inst.save()
+        return HttpResponse()
     else:
-        response = HttpResponse(json.dumps(eval("{'code':400, 'auth':False, 'method':'unknown'}")), content_type='json')
-        return response
+        return HttpResponseBadRequest()
 
 
 def log_in(request):

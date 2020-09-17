@@ -30,10 +30,13 @@ class Compression:
 
     def __create_compressed_thread(self):
         with open(self.image_dir + self.origin, 'wb') as infile:
-            for chunks in self.data.chunks():
-                infile.write(chunks)
+            try:
+                for chunks in self.data.chunks():
+                    infile.write(chunks)
+            except AttributeError:
+                infile.write(self.data)
 
         img = Image.open(self.image_dir + self.origin)
         img = img.resize((200, 200), Image.ANTIALIAS)
         img = img.convert('RGB')
-        img.save(self.compressed_dir+self.destination, 'JPEG', quality=75, optimize=True)
+        img.save(self.compressed_dir + self.destination, 'JPEG', quality=75, optimize=True)

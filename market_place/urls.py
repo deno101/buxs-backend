@@ -8,4 +8,5 @@ urlpatterns = [
     path('updata', views.upload_data, name='uplaod'),
     path('gdesc', views.get_product_by_id_for_desc),
     path('cart', views.get_product_by_id_for_cart),
+    path('addproduct', views.upload_data_from_android),
 ]
