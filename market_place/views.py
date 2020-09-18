@@ -13,6 +13,7 @@ from .image_compression import Compression
 import base64
 
 from django.views.decorators.csrf import csrf_exempt
+from buxsbackend.forms import Login
 
 
 def queryset_to_dict(queryset):
@@ -39,7 +40,7 @@ def get_mp(request):
 def get_img(request):
     path = request.GET.get('path')
 
-    with open(f'img/compressed/{path}', 'rb') as f:
+    with open(f'img/marketplace/compressed/{path}', 'rb') as f:
         data = f.read()
 
     return HttpResponse(data, content_type="image/jpeg")
@@ -74,7 +75,7 @@ def upload_data(request):
 
             origin2 = product_id + "-2." + request.FILES['img2'].name.split('.')[-1]
             db_inst.image_url2 = product_id + "-2." + 'jpg'
-            Compression(origin=origin2, destination=db_inst.image_url2, data=request.FILES['img2']).compress()
+            Compression(origin=origin2, destination=db_inst.image_url2, data=request.FILES['img2'], ).compress()
 
             origin3 = product_id + "-3." + request.FILES['img3'].name.split('.')[-1]
             db_inst.image_url3 = product_id + "-3." + 'jpg'
@@ -139,7 +140,7 @@ def upload_data_from_android(request):
 def log_in(request):
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            form = forms.Login(request.POST)
+            form = Login(request.POST)
             if form.is_valid():
                 username = form.cleaned_data.get('username')
                 password = form.cleaned_data.get("password")
@@ -160,7 +161,7 @@ def log_in(request):
                 })
 
         else:
-            redirect('uplaod')
+            redirect('upload')
     else:
         return render(request, 'login.html')
 

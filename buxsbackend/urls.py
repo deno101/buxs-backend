@@ -23,5 +23,6 @@ urlpatterns = [
     path('test', views.test),
     path('signup', views.signup),
     path('mplace/', include('market_place.urls')),
-    path('mpesa_pay/', include('mpesa_pay.urls'))
+    path('mpesa_pay/', include('mpesa_pay.urls')),
+    path('food/', include('fastfood.urls')),
 ]

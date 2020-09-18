@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buxsbackend',
     'market_place',
+    'fastfood'
 ]
 
 MIDDLEWARE = [

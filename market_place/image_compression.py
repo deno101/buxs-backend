@@ -3,12 +3,15 @@ import threading
 
 
 class Compression:
+    MARKETPLACE = 1
+    FASTFOOD = 2
+
     origin = None
-    compressed_dir = 'img/compressed/'
-    image_dir = 'img/'
+    image_dir_marketplace = 'img/marketplace/'
+    image_dir_fastfood = 'img/fastfood/'
     data = None
 
-    def __init__(self, origin='', data=None, destination=''):
+    def __init__(self, origin='', data=None, destination='', const=MARKETPLACE):
         """
 
         :param origin
@@ -22,6 +25,12 @@ class Compression:
         self.origin = origin
         self.data = data
         self.destination = destination
+
+        if const == self.MARKETPLACE:
+            self.image_dir = self.image_dir_marketplace
+        elif const == self.FASTFOOD:
+            self.image_dir = self.image_dir_fastfood
+
         if destination is None:
             self.destination = origin
 
@@ -39,4 +48,4 @@ class Compression:
         img = Image.open(self.image_dir + self.origin)
         img = img.resize((200, 200), Image.ANTIALIAS)
         img = img.convert('RGB')
-        img.save(self.compressed_dir + self.destination, 'JPEG', quality=75, optimize=True)
+        img.save(self.image_dir + "compressed/" + self.destination, 'JPEG', quality=75, optimize=True)

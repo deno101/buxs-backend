@@ -1,0 +1,31 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    Product Name: <br>
+    <input type="text" name="name"><br>
+    price: <br>
+    <input type="text" name="price"><br>
+    category: <br>
+    <input type="text" name="category"><br>
+    description: <br>
+    <input type="text" name="description"><br>
+    Image1: <br>
+    <input type="file" name="img1"> <br>
+    Image2: <br>
+    <input type="file" name="img2"> <br>
+    Image3: <br>
+    <input type="file" name="img3"> <br>
+
+    Delivery Time <br>
+    <input type="Integer" name="delivery_time"> <br>
+
+    <input type="submit">
+</form>
+<br>
+<a href="{% url 'login' %}">
+    <button href="{% url 'login_fastfood' %}">
+        Login
+    </button>
+</a>
+<br>
+{{ error_msg }}
+{{ form }}
